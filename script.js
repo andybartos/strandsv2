@@ -1,18 +1,28 @@
 
-const words = ['OFFICE', 'PRINTER', 'PAPER', 'MOUSE', 'DESK', 'PEN', 'CHAIR', 'MARKER'];
+const wordPaths = {'DESK': [17, 11, 5, 4], 'PRINTER': [3, 2, 7, 1, 0, 6, 12], 'PAPER': [18, 13, 8, 9, 10], 'CHAIR': [16, 15, 14, 19, 20], 'PEN': [21, 22, 23], 'DESKTOP': [32, 27, 26, 25, 31, 30, 24], 'OFFICE': [36, 37, 38, 33, 28, 29], 'MOUSE': [34, 35, 40, 41, 47], 'MARKER': [46, 45, 39, 44, 43, 42]};
 const spangram = "OFFICE";
-const gridLetters = ['T', 'N', 'R', 'P', 'K', 'S', 'E', 'I', 'P', 'E', 'R', 'E', 'R', 'A', 'A', 'H', 'C', 'D', 'P', 'I', 'R', 'P', 'E', 'N', 'P', 'K', 'S', 'E', 'C', 'E', 'O', 'T', 'D', 'I', 'M', 'O', 'O', 'F', 'F', 'R', 'U', 'S', 'R', 'E', 'K', 'A', 'M', 'E'];
 const rows = 8;
 const cols = 6;
 let selected = [];
 let isDragging = false;
 
 function drawGrid() {
+  const letters = [
+    "T","N","R","P","K","S",
+    "E","I","P","E","R","E",
+    "R","A","A","H","C","D",
+    "P","I","R","P","E","N",
+    "P","K","S","E","C","E",
+    "O","T","D","I","M","O",
+    "O","F","F","R","U","S",
+    "R","E","K","A","M","E"
+  ];
+
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
-  for (let i = 0; i < gridLetters.length; i++) {
+  for (let i = 0; i < letters.length; i++) {
     const cell = document.createElement("div");
-    cell.textContent = gridLetters[i];
+    cell.textContent = letters[i];
     cell.className = "cell";
     cell.dataset.index = i;
     cell.dataset.row = Math.floor(i / cols);
@@ -57,17 +67,20 @@ function handleMove(e) {
 
 function handleEnd() {
   isDragging = false;
-  if (selected.length > 0) {
-    const word = selected.map(c => c.textContent).join("").toUpperCase();
-    const reverse = selected.map(c => c.textContent).reverse().join("").toUpperCase();
-    if (words.includes(word) || words.includes(reverse)) {
-      selected.forEach(c => {
-        c.classList.remove("selected");
-        c.classList.add((word === spangram || reverse === spangram) ? "found-spangram" : "found");
-      });
-    } else {
-      selected.forEach(c => c.classList.remove("selected"));
-    }
+  const indexes = selected.map(c => parseInt(c.dataset.index));
+  console.log("Selected path:", indexes);
+  const word = Object.entries(wordPaths).find(([w, path]) =>
+    JSON.stringify(path) === JSON.stringify(indexes)
+  );
+  if (word) {
+    console.log("Found word:", word[0]);
+    selected.forEach(c => {
+      c.classList.remove("selected");
+      c.classList.add(word[0] === spangram ? "found-spangram" : "found");
+    });
+  } else {
+    console.warn("No match for:", indexes);
+    selected.forEach(c => c.classList.remove("selected"));
   }
   selected = [];
 }
