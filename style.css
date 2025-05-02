@@ -1,0 +1,36 @@
+
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+  background: #f8f8f8;
+}
+#grid {
+  display: grid;
+  grid-template-columns: repeat(6, 45px);
+  grid-template-rows: repeat(8, 45px);
+  justify-content: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+.cell {
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 45px;
+  user-select: none;
+  touch-action: none;
+}
+.cell.selected {
+  background: #cce5ff;
+}
+.cell.found {
+  background: #b3e5fc;
+  color: black;
+}
+.cell.found-spangram {
+  background: #ffeb3b;
+  color: black;
+}
